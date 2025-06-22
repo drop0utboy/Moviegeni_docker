@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_DATABASE: moviedb
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3307:3307"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  web:
+    build: .
+    image: moviegeni
+    container_name: moviegeni-container
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - FLASK_ENV=development
+    volumes:
+      - .:/app
+    restart: unless-stopped
+
+volumes:
+  db-data:
